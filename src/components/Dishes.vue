@@ -11,6 +11,8 @@
 </template>
 
 <script>
+//TO DO: Everytime I notify Observer, you update all the components, this might create alot of fetches!!
+
   import modelInstance from "../data/DinnerModel";
   import Item from "@/components/Item";
   
@@ -22,7 +24,17 @@
     mounted() {
       // when data is retrieved we update it's properties
       // this will cause the component to re-render
+      /*
       modelInstance.getAllDishes().then(dishes => {
+        this.status = "LOADED"
+        this.dishes = dishes.results
+      }).catch(() => {
+        this.status = "ERROR"
+      })
+      modelInstance.addObserver(this);
+    }
+    */
+      modelInstance.searchDish().then(dishes => {
         this.status = "LOADED"
         this.dishes = dishes.results
       }).catch(() => {
@@ -44,7 +56,7 @@
         this.dishes = dishes.results
       }).catch(() => {
         this.status = "ERROR"
-      })
+      });
       }
     }
   }
@@ -62,9 +74,6 @@
 }
 
 </style>
-
-
-
 
 
 }

@@ -9,7 +9,7 @@ const httpOptions = {
 class DinnerModel extends ObservableModel {
   constructor() {
     super();
-    this._numberOfGuests = 4;
+    this._numberOfGuests = 3;
     this.getNumberOfGuests();
     this.menu = [];
     this.type = "";
@@ -45,17 +45,7 @@ class DinnerModel extends ObservableModel {
     console.log(this.getMenu());
     this.notifyObservers();
   }
-  
-  setSelectedID(id) {
-    this.selectedDish = id;
-    this.notifyObservers();
-  }
-
-  getSelectedID() {
-    return this.selectedDish;
-  }
-  
-
+    
   // API methods
   /**
    * Do an API call to the search API endpoint.

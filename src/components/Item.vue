@@ -5,8 +5,8 @@
         <button @click="$router.push({ name: 'DishDetail', params: { dish: dish } })">
            {{ dish.title }}
         </button>
-      </div>
-    <button @click="addDishFunc">Add dish to menu</button>
+    <button @click="addDishFunc">Add dish</button>
+    </div>
   </div>
 </template>
 
