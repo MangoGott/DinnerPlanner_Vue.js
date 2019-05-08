@@ -1,11 +1,14 @@
 <template>
   <div class="Dishes">
-    <h3>Dishes</h3>
-    
-      <em v-if='status === "LOADING"'>Loading...</em>
+    <h2>Dishes</h2>
+      
+      <h2 v-if='status === "LOADING"'>LOADING ;)</h2>
       <b v-else-if='status === "ERROR"'>Failed to load data, please try again</b>
-      <div class="dishes">
+
+      <div v-else-if='status === "LOADED"' class="dishes">
+     
       <item v-for="dish in dishes" :id="dish.id" :key="dish.id" :dish="dish" :model="model"></item>
+      
       </div>
   </div>
 </template>
@@ -22,23 +25,11 @@
       item: Item
     },
     mounted() {
-      // when data is retrieved we update it's properties
-      // this will cause the component to re-render
-      /*
-      modelInstance.getAllDishes().then(dishes => {
-        this.status = "LOADED"
-        this.dishes = dishes.results
-      }).catch(() => {
-        this.status = "ERROR"
-      })
-      modelInstance.addObserver(this);
-    }
-    */
       modelInstance.searchDish().then(dishes => {
         this.status = "LOADED"
         this.dishes = dishes.results
       }).catch(() => {
-        this.status = "ERROR"
+       this.status = "ERROR"
       })
       modelInstance.addObserver(this);
     },
@@ -51,12 +42,15 @@
     methods:{
       
       update(model, changeDetails){
-        modelInstance.searchDish().then(dishes => {
-        this.status = "LOADED"
-        this.dishes = dishes.results
-      }).catch(() => {
-        this.status = "ERROR"
-      });
+        if(changeDetails === "fetch"){
+           this.status = "LOADING"
+           modelInstance.searchDish().then(dishes => {
+           this.status = "LOADED"
+           this.dishes = dishes.results
+           }).catch(() => {
+           this.status = "ERROR"
+           });
+        }
       }
     }
   }
@@ -67,10 +61,14 @@
 .dishes {
   display: flex;
   flex-flow: wrap;
-  width: 700px;
   height: 400px;
   overflow: scroll;
   padding: 10px;
+  color: white;
+}
+
+.dishes > h2 {
+  color: white;
 }
 
 </style>

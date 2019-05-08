@@ -8,13 +8,31 @@ const httpOptions = {
 
 class DinnerModel extends ObservableModel {
   constructor() {
-    super();
-    this._numberOfGuests = 3;
-    this.getNumberOfGuests();
-    this.menu = [];
+    super();    
     this.type = "";
     this.filter = ""; 
     this.selectedDish;
+    if(localStorage.selectedDish){
+      this.selectedDish = localStorage.selectedDish;
+    }else {
+      this.selectedDish = 0;
+    }
+    
+    this.menu;
+    if(localStorage.menu){
+      this.menu = JSON.parse(localStorage.menu);
+    }else {
+      this.menu = [];
+    }
+    
+    this.numberOfGuests;
+    if(localStorage.numberOfGuests){
+      this.numberOfGuests = localStorage.numberOfGuests;
+    }else {
+      this.numberOfGuests = 2; 
+    }
+
+
   }
 
   /**
@@ -22,7 +40,7 @@ class DinnerModel extends ObservableModel {
    * @returns {number}
    */
   getNumberOfGuests() {
-    return this._numberOfGuests;
+    return this.numberOfGuests;
   }
 
   /**
@@ -30,9 +48,14 @@ class DinnerModel extends ObservableModel {
    * @param {number} num
    */
   setNumberOfGuests(num) {
-    this._numberOfGuests = num;
+    if(num > 0){
+    this.numberOfGuests = num;
+    localStorage.numberOfGuests = num; 
    // this.getDish(592479).then(dishX => this.addToMenu(dishX));
-    this.notifyObservers();
+    this.notifyObservers("changeGuests");
+    }else{
+      console.log("can't have negative guests");
+    }
   }
 
   getMenu() {
@@ -41,11 +64,63 @@ class DinnerModel extends ObservableModel {
 
   
   addMenu(dish) {
-    this.menu.push(dish); //LÄgg till check för dubbletter. 
-    console.log(this.getMenu());
-    this.notifyObservers();
-  }
+
+    let i;
+    let exists = false;
+
+      for(i = 0; i < this.menu.length; i++){
+        if(this.menu[i].id === dish.id){
+          exists = true;
+          console.log("aldready in menu!!");
+        }
+      }
+
+      if(!exists){
+        this.menu.push(dish); //LÄgg till check för dubbletter. Done!
+        localStorage.menu = JSON.stringify(this.menu);
+        console.log("Added to menu!");
+        console.log(dish);
+
+        this.notifyObservers("changeMenu");
+      }
     
+  }
+
+
+  removeDish(dish){
+    let i;
+      for(i = 0; i < this.menu.length; i++){
+        if(this.menu[i].id === dish.id){
+          this.menu.splice(i,1);
+          localStorage.menu = JSON.stringify(this.menu);
+          console.log("removed!");
+          this.notifyObservers("changeMenu");
+        }
+      }
+  }    
+
+
+//Fel objekt skickas in!
+  menuPrice(){
+    let menu = this.menu;
+    let i; 
+    let total = 0;
+    for(i = 0; i < this.menu.length; i++){
+      total += menu[i].pricePerServing;
+      //Kanske måste kolla om PPS finns?
+      }
+    return Math.ceil(total * this.numberOfGuests);
+
+  }
+  setSelectedDish(id){
+    this.selectedDish = id;  
+    localStorage.selectedDish = id;
+  }
+  getSelectedDish(){
+    return this.selectedDish; 
+  }
+
+
   // API methods
   /**
    * Do an API call to the search API endpoint.
@@ -64,12 +139,13 @@ class DinnerModel extends ObservableModel {
 
   setFilter(filter){
     this.filter = filter;
-    this.notifyObservers();
+    this.notifyObservers("fetch");
   }
 
   setType(type){
     this.type = type;
-    this.notifyObservers();
+    this.notifyObservers("fetch");
+    
   }
 
   getDish(id) {

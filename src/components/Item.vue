@@ -2,9 +2,14 @@
   <div class="item">
       <div class="item2">
         <img :src="url + dish.image">
-        <button @click="$router.push({ name: 'DishDetail', params: { dish: dish } })">
+       
+     <router-link to=/dishdetail>
+        <button @click="godishDetails">
            {{ dish.title }}
         </button>
+    </router-link>
+
+
     <button @click="addDishFunc">Add dish</button>
     </div>
   </div>
@@ -23,8 +28,17 @@ export default {
       this.menu = this.model.getMenu();
     },
     addDishFunc() {
-      this.model.addMenu(this.dish);
       
+      this.model.getDish(this.dish.id)
+      .then(elem => {
+          this.model.addMenu(elem);
+      })
+      .catch((error) => {
+               // alert("Couldn't complete fetch :(" + error);
+      });
+    }, godishDetails(){
+      console.log("Pushed:" + this.dish.id);
+      this.model.setSelectedDish(this.dish.id);
     }
   }
 };
@@ -34,19 +48,21 @@ export default {
 
 .item {
     display: flex;
-    flex-flow: column;
     align-items: center;
-    height: 200px;
+    flex-flow: column;
+    flex-wrap: wrap;
+    height: auto;
     width: 200px;
     padding: 10px;
+    color: black;
     
 }
 
 .item2 > img {
   display: flex;
   width: auto;
-  height: 150px;
-  width: 150px;
+  height: 100px;
+  width: 100px;
   flex-flow: wrap;
   padding: 10px;
 }

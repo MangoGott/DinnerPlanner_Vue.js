@@ -1,17 +1,25 @@
 <template>
   <div class="select-dish">
-    <h2>This is the Select Dish screen</h2>
       <!-- We pass the model as property to the Sidebar component -->
       <sidebar :model="this.model"/>
-        <h1>Find a Dish</h1>
+    
         <div class="search">
+          <h2>Find a Dish</h2>
           <input v-model="filter" type="text" placeholder="Serch here">
           <form >
             <select v-model="type">
-              <option value="main course">Main course</option>
+              <option value="all">All</option>
               <option value="side dish">Side dish</option>
+              <option value="main course">Main course</option>
               <option value="dessert">Dessert</option>
               <option value="appetizer">Appetizer</option>
+              <option value="salad">Salad</option>
+              <option value="bread">Bread</option>
+              <option value="breakfast">Breakfast</option>
+              <option value="soup">Soup</option>
+              <option value="beverage">Beverage</option>
+              <option value="sauce">Sauce</option>
+              <option value="drink">Drink</option>
             </select>
           </form>
           <button v-on:click="results()">Search</button>
@@ -47,3 +55,26 @@
     }
   }
 </script>
+
+<style>
+
+.select-dish {
+  display: flex;
+  flex-flow: row;
+  margin: 10px;
+}
+
+.search {
+  background: black;
+  margin: 10px 10px 0px 10px; 
+  padding: 10px;
+  color: white;
+  height: auto;
+  width: 600px;
+}
+
+.search > h2 {
+  color: white;
+}
+
+</style>
